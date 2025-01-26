@@ -1,0 +1,469 @@
+- id: '1732652280862'
+  alias: Notify on doorbell press
+  description: ''
+  triggers:
+  - type: turned_on
+    device_id: e6944884654136d552f40251f30985c8
+    entity_id: 385a0a9bea3f3d214aaf4a9997bd256a
+    domain: binary_sensor
+    trigger: device
+  conditions: []
+  actions:
+  - alias: Notify Giles
+    if:
+    - condition: zone
+      entity_id: device_tracker.giles_iphone
+      zone: zone.home
+    then:
+    - action: notify.mobile_app_iphone_102
+      metadata: {}
+      data:
+        message: Doorbell!
+        data:
+          entity_id: camera.reolink_video_doorbell_poe_fluent
+          push:
+            sound:
+              name: default
+              critical: 1
+              volume: 1
+    else:
+    - action: notify.mobile_app_iphone_102
+      metadata: {}
+      data:
+        message: Doorbell!
+        data:
+          entity_id: camera.reolink_video_doorbell_poe_fluent
+  - alias: Notify Laura
+    if:
+    - condition: zone
+      entity_id: device_tracker.laura_s_iphone
+      zone: zone.home
+    then:
+    - action: notify.mobile_app_laura_s_iphone
+      metadata: {}
+      data:
+        message: Doorbell!
+        data:
+          entity_id: camera.reolink_video_doorbell_poe_fluent
+          push:
+            sound:
+              name: default
+              critical: 1
+              volume: 1
+    else:
+    - action: notify.mobile_app_laura_s_iphone
+      metadata: {}
+      data:
+        message: Doorbell!
+        data:
+          entity_id: camera.reolink_video_doorbell_poe_fluent
+  mode: single
+- id: '1732716077515'
+  alias: Turn outside light on when detecting person
+  description: ''
+  triggers:
+  - type: turned_on
+    device_id: e6944884654136d552f40251f30985c8
+    entity_id: 87b24492d927011cc6600aa569437a2b
+    domain: binary_sensor
+    trigger: device
+  conditions:
+  - condition: and
+    conditions:
+    - condition: device
+      type: is_off
+      device_id: 7f3381f0bab2fadb3b230eaa3990b961
+      entity_id: df0e9d22a97eaa01d04c2a64ff671cde
+      domain: switch
+    enabled: false
+  - condition: sun
+    before: sunrise
+    after: sunset
+  actions:
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.front_door_outside_light
+  - wait_for_trigger:
+    - trigger: state
+      entity_id:
+      - binary_sensor.reolink_video_doorbell_poe_person
+      to: 'off'
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 5
+    timeout:
+      hours: 0
+      minutes: 2
+      seconds: 0
+      milliseconds: 0
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+    enabled: false
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.front_door_outside_light
+  mode: single
+- id: '1732739115688'
+  alias: Set Giles WFH defaults for next day
+  description: ''
+  triggers:
+  - trigger: time
+    at: '18:00:00'
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: time
+        weekday:
+        - mon
+        - thu
+      sequence:
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.giles_wfh_tomorrow
+    default:
+    - action: input_boolean.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id: input_boolean.giles_wfh_tomorrow
+  mode: single
+- id: '1732739220683'
+  alias: Top study heating - end of day
+  description: ''
+  triggers:
+  - trigger: time
+    at: '18:30:00'
+  conditions: []
+  actions:
+  - action: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.top_study_heating_empty
+  mode: single
+- id: '1732739340918'
+  alias: Top study heating - start of day
+  description: ''
+  triggers:
+  - trigger: time
+    at: 07:00:00
+  conditions:
+  - condition: state
+    entity_id: input_boolean.giles_wfh_tomorrow
+    state: 'on'
+  actions:
+  - action: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.giles_wfh_heatong
+  mode: single
+- id: '1732743913673'
+  alias: Bedroom 1 heating - night
+  description: ''
+  triggers:
+  - trigger: time
+    at: '20:00:00'
+  conditions: []
+  actions:
+  - action: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.bedroom_1_heating_night
+    data: {}
+  mode: single
+- id: '1732744052178'
+  alias: Bedroom 1 heating - out of bed
+  description: ''
+  triggers:
+  - trigger: time
+    at: 08:30:00
+  conditions: []
+  actions:
+  - action: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.bedroom_1_heating_empty
+  mode: single
+- id: '1733057357259'
+  alias: 'Warm top bathroom in morning '
+  description: ''
+  triggers:
+  - trigger: time
+    at: 07:00:00
+  conditions: []
+  actions:
+  - action: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.top_bathroom_hot
+  mode: single
+- id: '1733057396199'
+  alias: Cool top bathroom after showers
+  description: ''
+  triggers:
+  - trigger: time
+    at: '10:00:00'
+  conditions: []
+  actions:
+  - action: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.top_bathroom_cold
+  mode: single
+- id: '1733074580860'
+  alias: Auto backup
+  description: ''
+  use_blueprint:
+    path: jcwillox/automatic_backups.yaml
+- id: '1733572892240'
+  alias: Bedroom 1 - Giles reading light
+  description: ''
+  triggers:
+  - domain: mqtt
+    device_id: 759be756f19142ebc2d39f33947b8cbd
+    type: action
+    subtype: 'on'
+    trigger: device
+    id: Giles bedside switch on
+  - domain: mqtt
+    device_id: 759be756f19142ebc2d39f33947b8cbd
+    type: action
+    subtype: 'off'
+    trigger: device
+    id: Giles bedside switch off
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Giles bedside switch on
+      sequence:
+      - action: switch.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id:
+          - switch.bedroom_1_giles_bedside_lamp
+    - conditions:
+      - condition: trigger
+        id:
+        - Giles bedside switch off
+      sequence:
+      - action: scene.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: scene.bedroom_1_all_lights_off
+  mode: single
+- id: '1733573872400'
+  alias: Bedroom 1 Scene Selection
+  description: ''
+  use_blueprint:
+    path: fleeman/zigbee2mqtt-philips-hue-tap-dial-switch-by-smarthomegeeks-io.yaml
+    input:
+      mqtt_topic: zigbee2mqtt/bedroom_1/scene_selector
+      button_1_single_press:
+      - action: scene.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: scene.bedroom_1_all_lights_off
+      button_4_single_press:
+      - type: toggle
+        device_id: afe38ae880d41e11b271ed5a0745686f
+        entity_id: 0dcd2ddb18d08139d1635b684bbf2a5f
+        domain: light
+      tap_counter: counter.bedroom_1_scene_selection_counter
+      last_pressed: input_text.bedroom_1_scene_selection_input_text
+      button_2_single_press:
+      - action: scene.turn_on
+        metadata: {}
+        data:
+          transition: 2
+        target:
+          entity_id: scene.bedroom_1_all_lights_on
+      button_1_rotate_clockwise:
+      - action: light.turn_on
+        metadata: {}
+        data:
+          brightness_step_pct: 20
+        target:
+          entity_id: light.bedroom_1_dimmable_lights
+      button_2_rotate_clockwise:
+      - action: light.turn_on
+        metadata: {}
+        data:
+          brightness_step_pct: 20
+        target:
+          entity_id: light.bedroom_1_dimmable_lights
+      button_2_rotate_counter_clockwise:
+      - action: light.turn_on
+        metadata: {}
+        data:
+          brightness_step_pct: -20
+        target:
+          entity_id: light.bedroom_1_dimmable_lights
+      button_3_rotate_counter_clockwise:
+      - action: light.turn_on
+        metadata: {}
+        data:
+          brightness_step_pct: -20
+        target:
+          entity_id: light.bedroom_1_dimmable_lights
+      button_4_rotate_counter_clockwise:
+      - action: light.turn_on
+        metadata: {}
+        data:
+          brightness_step_pct: -20
+        target:
+          entity_id: light.bedroom_1_dimmable_lights
+      button_3_rotate_clockwise:
+      - action: light.turn_on
+        metadata: {}
+        data:
+          brightness_step_pct: 20
+        target:
+          entity_id: light.bedroom_1_dimmable_lights
+      button_4_rotate_clockwise:
+      - action: light.turn_on
+        metadata: {}
+        data:
+          brightness_step_pct: 20
+        target:
+          entity_id: light.bedroom_1_dimmable_lights
+      button_1_rotate_counter_clockwise:
+      - action: light.turn_on
+        metadata: {}
+        data:
+          brightness_step_pct: -20
+        target:
+          entity_id: light.bedroom_1_dimmable_lights
+- id: '1733654207907'
+  alias: Under stairs - light on motion
+  description: ''
+  triggers:
+  - type: occupied
+    device_id: 97381bb92ee48a798210240fc335bf53
+    entity_id: a7451804a42bd88c3c787531eaeb444f
+    domain: binary_sensor
+    trigger: device
+  conditions: []
+  actions:
+  - type: turn_on
+    device_id: 25163ada311a44b97a05f1511d2b42cc
+    entity_id: 21de6b637a7f9598fd9e070626146745
+    domain: light
+  - wait_for_trigger:
+    - type: not_occupied
+      device_id: 97381bb92ee48a798210240fc335bf53
+      entity_id: a7451804a42bd88c3c787531eaeb444f
+      domain: binary_sensor
+      trigger: device
+  - type: turn_off
+    device_id: 25163ada311a44b97a05f1511d2b42cc
+    entity_id: 21de6b637a7f9598fd9e070626146745
+    domain: light
+  mode: single
+- id: '1736632531611'
+  alias: 'Boiler: Turn on when TRVs demand heat'
+  description: ''
+  triggers:
+  - trigger: numeric_state
+    entity_id:
+    - sensor.heating_max_trv_position
+    above: input_number.heating_trv_boiler_threshold
+  conditions: []
+  actions:
+  - type: turn_on
+    device_id: 56a0671460c1d2387a26633247b827bc
+    entity_id: 01b89deab035762fef59e2a7c1fec6e4
+    domain: switch
+  mode: single
+- id: '1736632597342'
+  alias: 'Boiler: Turn off when TRVs turn down'
+  description: ''
+  triggers:
+  - trigger: numeric_state
+    entity_id:
+    - sensor.heating_max_trv_position
+    below: 100
+  conditions: []
+  actions:
+  - type: turn_off
+    device_id: 56a0671460c1d2387a26633247b827bc
+    entity_id: 01b89deab035762fef59e2a7c1fec6e4
+    domain: switch
+  mode: single
+- id: '1736632959563'
+  alias: 'Boiler: Set correct state based on TRVs'
+  description: ''
+  triggers:
+  - trigger: time_pattern
+    minutes: '5'
+  - trigger: state
+    entity_id:
+    - sensor.heating_max_trv_position
+  - trigger: state
+    entity_id:
+    - sensor.heating_max_trv_position
+    attribute: max_entity_id
+  - trigger: numeric_state
+    entity_id:
+    - sensor.heating_max_trv_position
+    above: input_number.heating_trv_boiler_threshold
+  - trigger: numeric_state
+    entity_id:
+    - sensor.heating_max_trv_position
+    below: input_number.heating_trv_boiler_threshold
+  conditions: []
+  actions:
+  - if:
+    - condition: numeric_state
+      entity_id: sensor.heating_max_trv_position
+      above: input_number.heating_trv_boiler_threshold
+    then:
+    - type: turn_on
+      device_id: 56a0671460c1d2387a26633247b827bc
+      entity_id: 01b89deab035762fef59e2a7c1fec6e4
+      domain: switch
+    else:
+    - type: turn_off
+      device_id: 56a0671460c1d2387a26633247b827bc
+      entity_id: 01b89deab035762fef59e2a7c1fec6e4
+      domain: switch
+  mode: single
+- id: '1736755355592'
+  alias: 'Boiler: force correct state'
+  description: ''
+  triggers:
+  - trigger: time_pattern
+    minutes: '1'
+  - trigger: time_pattern
+    minutes: '30'
+  conditions: []
+  actions:
+  - type: toggle
+    device_id: 56a0671460c1d2387a26633247b827bc
+    entity_id: 01b89deab035762fef59e2a7c1fec6e4
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 20
+      milliseconds: 0
+  - type: toggle
+    device_id: 56a0671460c1d2387a26633247b827bc
+    entity_id: 01b89deab035762fef59e2a7c1fec6e4
+    domain: switch
+  mode: single

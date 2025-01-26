@@ -1,0 +1,536 @@
+- id: '1732739404416'
+  name: Top study heating - comfort
+  entities:
+    switch.top_study_radiator_window_detection:
+      icon: mdi:window-open-variant
+      friendly_name: top_study/radiator Window detection
+      state: 'off'
+    switch.top_study_radiator_valve_detection:
+      friendly_name: top_study/radiator Valve detection
+      state: unknown
+    climate.top_study_radiator:
+      hvac_modes:
+      - heat
+      - auto
+      - 'off'
+      min_temp: 5
+      max_temp: 35
+      target_temp_step: 0.5
+      preset_modes:
+      - none
+      - schedule
+      - manual
+      - boost
+      - complex
+      - comfort
+      - eco
+      - away
+      current_temperature: 22
+      temperature: 22
+      hvac_action: idle
+      preset_mode: comfort
+      friendly_name: top_study/radiator
+      supported_features: 401
+      state: auto
+    switch.top_study_radiator_auto_lock:
+      friendly_name: top_study/radiator Auto lock
+      state: 'off'
+    switch.top_study_radiator_away_mode:
+      friendly_name: top_study/radiator Away mode
+      state: 'off'
+    text.top_study_radiator_workdays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: top_study/radiator Workdays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+    text.top_study_radiator_holidays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: top_study/radiator Holidays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+  metadata: {}
+- id: '1732739460480'
+  name: Top study heating - empty
+  entities:
+    switch.top_study_radiator_window_detection:
+      icon: mdi:window-open-variant
+      friendly_name: top_study/radiator Window detection
+      state: 'off'
+    switch.top_study_radiator_valve_detection:
+      friendly_name: top_study/radiator Valve detection
+      state: unknown
+    climate.top_study_radiator:
+      hvac_modes:
+      - heat
+      - auto
+      - 'off'
+      min_temp: 5
+      max_temp: 35
+      target_temp_step: 0.5
+      preset_modes:
+      - none
+      - schedule
+      - manual
+      - boost
+      - complex
+      - comfort
+      - eco
+      - away
+      current_temperature: 22
+      temperature: 15
+      hvac_action: idle
+      preset_mode: eco
+      friendly_name: top_study/radiator
+      supported_features: 401
+      state: 'off'
+    switch.top_study_radiator_auto_lock:
+      friendly_name: top_study/radiator Auto lock
+      state: 'off'
+    switch.top_study_radiator_away_mode:
+      friendly_name: top_study/radiator Away mode
+      state: 'off'
+    text.top_study_radiator_workdays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: top_study/radiator Workdays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+    text.top_study_radiator_holidays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: top_study/radiator Holidays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+  metadata: {}
+- id: '1732743830150'
+  name: Bedroom 1 heating - comfort
+  entities:
+    switch.bedroom_1_left_radiator_window_detection:
+      icon: mdi:window-open-variant
+      friendly_name: bedroom_1/left_radiator Window detection
+      state: 'off'
+    switch.bedroom_1_left_radiator_valve_detection:
+      friendly_name: bedroom_1/left_radiator Valve detection
+      state: unknown
+    climate.bedroom_1_left_radiator:
+      hvac_modes:
+      - heat
+      - auto
+      - 'off'
+      min_temp: 5
+      max_temp: 35
+      target_temp_step: 0.5
+      preset_modes:
+      - none
+      - schedule
+      - manual
+      - boost
+      - complex
+      - comfort
+      - eco
+      - away
+      current_temperature: 17
+      temperature: 19
+      hvac_action: idle
+      preset_mode: comfort
+      friendly_name: bedroom_1/left_radiator
+      supported_features: 401
+      state: auto
+    switch.bedroom_1_left_radiator_auto_lock:
+      friendly_name: bedroom_1/left_radiator Auto lock
+      state: 'off'
+    switch.bedroom_1_left_radiator_away_mode:
+      friendly_name: bedroom_1/left_radiator Away mode
+      state: 'off'
+    text.bedroom_1_left_radiator_workdays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: bedroom_1/left_radiator Workdays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+    text.bedroom_1_left_radiator_holidays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: bedroom_1/left_radiator Holidays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+    switch.bedroom_1_right_radiator_window_detection:
+      icon: mdi:window-open-variant
+      friendly_name: bedroom_1/right_radiator Window detection
+      state: 'off'
+    switch.bedroom_1_right_radiator_valve_detection:
+      friendly_name: bedroom_1/right_radiator Valve detection
+      state: unknown
+    climate.bedroom_1_right_radiator:
+      hvac_modes:
+      - heat
+      - auto
+      - 'off'
+      min_temp: 5
+      max_temp: 35
+      target_temp_step: 0.5
+      preset_modes:
+      - none
+      - schedule
+      - manual
+      - boost
+      - complex
+      - comfort
+      - eco
+      - away
+      current_temperature: 15.5
+      temperature: 19
+      hvac_action: idle
+      preset_mode: comfort
+      friendly_name: bedroom_1/right_radiator
+      supported_features: 401
+      state: auto
+    switch.bedroom_1_right_radiator_auto_lock:
+      friendly_name: bedroom_1/right_radiator Auto lock
+      state: 'off'
+    switch.bedroom_1_right_radiator_away_mode:
+      friendly_name: bedroom_1/right_radiator Away mode
+      state: 'off'
+    text.bedroom_1_right_radiator_workdays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: bedroom_1/right_radiator Workdays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+    text.bedroom_1_right_radiator_holidays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: bedroom_1/right_radiator Holidays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+  icon: mdi:fire
+  metadata: {}
+- id: '1732743868160'
+  name: Bedroom 1 heating - empty
+  entities:
+    switch.bedroom_1_left_radiator_window_detection:
+      icon: mdi:window-open-variant
+      friendly_name: bedroom_1/left_radiator Window detection
+      state: 'off'
+    switch.bedroom_1_left_radiator_valve_detection:
+      friendly_name: bedroom_1/left_radiator Valve detection
+      state: unknown
+    climate.bedroom_1_left_radiator:
+      hvac_modes:
+      - heat
+      - auto
+      - 'off'
+      min_temp: 5
+      max_temp: 35
+      target_temp_step: 0.5
+      preset_modes:
+      - none
+      - schedule
+      - manual
+      - boost
+      - complex
+      - comfort
+      - eco
+      - away
+      current_temperature: 18
+      temperature: 15
+      hvac_action: idle
+      preset_mode: eco
+      friendly_name: bedroom_1/left_radiator
+      supported_features: 401
+      state: auto
+    switch.bedroom_1_left_radiator_auto_lock:
+      friendly_name: bedroom_1/left_radiator Auto lock
+      state: 'off'
+    switch.bedroom_1_left_radiator_away_mode:
+      friendly_name: bedroom_1/left_radiator Away mode
+      state: 'off'
+    text.bedroom_1_left_radiator_workdays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: bedroom_1/left_radiator Workdays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+    text.bedroom_1_left_radiator_holidays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: bedroom_1/left_radiator Holidays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+    switch.bedroom_1_right_radiator_window_detection:
+      icon: mdi:window-open-variant
+      friendly_name: bedroom_1/right_radiator Window detection
+      state: 'off'
+    switch.bedroom_1_right_radiator_valve_detection:
+      friendly_name: bedroom_1/right_radiator Valve detection
+      state: unknown
+    climate.bedroom_1_right_radiator:
+      hvac_modes:
+      - heat
+      - auto
+      - 'off'
+      min_temp: 5
+      max_temp: 35
+      target_temp_step: 0.5
+      preset_modes:
+      - none
+      - schedule
+      - manual
+      - boost
+      - complex
+      - comfort
+      - eco
+      - away
+      current_temperature: 18.5
+      temperature: 15
+      hvac_action: heating
+      preset_mode: eco
+      friendly_name: bedroom_1/right_radiator
+      supported_features: 401
+      state: auto
+    switch.bedroom_1_right_radiator_auto_lock:
+      friendly_name: bedroom_1/right_radiator Auto lock
+      state: 'off'
+    switch.bedroom_1_right_radiator_away_mode:
+      friendly_name: bedroom_1/right_radiator Away mode
+      state: 'off'
+    text.bedroom_1_right_radiator_workdays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: bedroom_1/right_radiator Workdays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+    text.bedroom_1_right_radiator_holidays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: bedroom_1/right_radiator Holidays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+  icon: mdi:fire
+  metadata: {}
+- id: '1733057279026'
+  name: Top Bathroom Hot
+  entities:
+    switch.top_bathroom_radiator_window_detection:
+      icon: mdi:window-open-variant
+      friendly_name: top_bathroom/radiator Window detection
+      state: 'off'
+    switch.top_bathroom_radiator_valve_detection:
+      friendly_name: top_bathroom/radiator Valve detection
+      state: unknown
+    climate.top_bathroom_radiator:
+      hvac_modes:
+      - heat
+      - auto
+      - 'off'
+      min_temp: 5
+      max_temp: 35
+      target_temp_step: 0.5
+      preset_modes:
+      - none
+      - schedule
+      - manual
+      - boost
+      - complex
+      - comfort
+      - eco
+      - away
+      current_temperature: 19.5
+      temperature: 18.5
+      hvac_action: idle
+      preset_mode: comfort
+      friendly_name: top_bathroom/radiator
+      supported_features: 401
+      state: auto
+    switch.top_bathroom_radiator_auto_lock:
+      friendly_name: top_bathroom/radiator Auto lock
+      state: 'off'
+    switch.top_bathroom_radiator_away_mode:
+      friendly_name: top_bathroom/radiator Away mode
+      state: 'off'
+    text.top_bathroom_radiator_workdays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: top_bathroom/radiator Workdays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+    text.top_bathroom_radiator_holidays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: top_bathroom/radiator Holidays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+  metadata: {}
+- id: '1733057316719'
+  name: Top bathroom cold
+  entities:
+    switch.top_bathroom_radiator_window_detection:
+      icon: mdi:window-open-variant
+      friendly_name: top_bathroom/radiator Window detection
+      state: 'off'
+    switch.top_bathroom_radiator_valve_detection:
+      friendly_name: top_bathroom/radiator Valve detection
+      state: unknown
+    climate.top_bathroom_radiator:
+      hvac_modes:
+      - heat
+      - auto
+      - 'off'
+      min_temp: 5
+      max_temp: 35
+      target_temp_step: 0.5
+      preset_modes:
+      - none
+      - schedule
+      - manual
+      - boost
+      - complex
+      - comfort
+      - eco
+      - away
+      current_temperature: 19.5
+      temperature: 15
+      hvac_action: idle
+      preset_mode: eco
+      friendly_name: top_bathroom/radiator
+      supported_features: 401
+      state: auto
+    switch.top_bathroom_radiator_auto_lock:
+      friendly_name: top_bathroom/radiator Auto lock
+      state: 'off'
+    switch.top_bathroom_radiator_away_mode:
+      friendly_name: top_bathroom/radiator Away mode
+      state: 'off'
+    text.top_bathroom_radiator_workdays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: top_bathroom/radiator Workdays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+    text.top_bathroom_radiator_holidays_schedule:
+      mode: text
+      min: 0
+      max: 255
+      pattern:
+      friendly_name: top_bathroom/radiator Holidays schedule
+      state: 06:00/20°C 08:00/15°C 11:30/15°C 12:30/15°C 17:30/20°C 22:00/15°C
+  metadata: {}
+- id: '1733572985894'
+  name: Bedroom 1 - All lights off
+  entities:
+    light.bedroom_1_floor_lamp:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - brightness
+      effect:
+      color_mode:
+      brightness:
+      friendly_name: bedroom_1/floor_lamp
+      supported_features: 44
+      state: 'off'
+    light.bedroom_1_ceiling_light:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - brightness
+      effect:
+      color_mode:
+      brightness:
+      friendly_name: bedroom_1/ceiling_light
+      supported_features: 44
+      state: 'off'
+    light.bedroom_1_giles_bedside_lamp:
+      supported_color_modes:
+      - onoff
+      color_mode:
+      friendly_name: bedroom_1/giles_bedside_lamp
+      supported_features: 0
+      state: 'off'
+  metadata:
+    light.bedroom_1_ceiling_light:
+      entity_only: true
+- id: '1733573309356'
+  name: Bedroom 1 - All lights on
+  entities:
+    light.bedroom_1_floor_lamp:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - brightness
+      effect:
+      color_mode: brightness
+      brightness: 255
+      friendly_name: bedroom_1/floor_lamp
+      supported_features: 44
+      state: 'on'
+    light.bedroom_1_giles_bedside_lamp:
+      supported_color_modes:
+      - onoff
+      color_mode: onoff
+      friendly_name: bedroom_1/giles_bedside_lamp
+      supported_features: 0
+      state: 'on'
+    light.bedroom_1_ceiling_light:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - brightness
+      effect:
+      color_mode: brightness
+      brightness: 255
+      friendly_name: bedroom_1/ceiling_light
+      supported_features: 44
+      state: 'on'
+  metadata: {}
+- id: '1733573367352'
+  name: Bedroom 1 - Giles reading
+  entities:
+    automation.bedroom_1_giles_switch_on:
+      id: '1733572892240'
+      last_triggered: '2025-01-18T07:30:00.150624+00:00'
+      mode: single
+      current: 0
+      icon: mdi:light-switch
+      friendly_name: Bedroom 1 - Giles bedside switch
+      state: 'off'
+  metadata:
+    automation.bedroom_1_giles_switch_on:
+      entity_only: true
