@@ -1,5 +1,6 @@
 import { HeatingDemand } from "./types.mts";
 import { RoomHeating } from "./room.mts";
+import { HassEntityManager } from "@digital-alchemy/hass";
 
 const FORCE_STATE_INTERVAL_SECONDS = 15 * 60; // 15 mins
 const FORCE_STATE_TOGGLE_GAP_SECONDS = 10; // 10 seconds
@@ -12,8 +13,11 @@ export class HeatingController {
 
   private lastForcedStateAt?: Date;
 
+  constructor(private hassEntityManager: HassEntityManager) {}
+
   public registerRoom(room: RoomHeating) {
     if (!this.rooms.find(existingRoom => existingRoom.name === room.name)) {
+      room.setHassEntityManager(this.hassEntityManager);
       this.rooms.push(room);
     }
   }
@@ -35,8 +39,6 @@ export class HeatingController {
   }
 
   private heartbeat() {
-    this.logRoomStates();
-
     const currentState = this.updateState();
 
     const now = new Date();
@@ -54,13 +56,11 @@ export class HeatingController {
     }
   }
 
-  private logRoomStates() {
-    for (const room of this.rooms) {
-      console.log(room.name, room.getState());
-    }
-  }
-
   private updateState() {
+    for (const room of this.rooms) {
+      room.heartbeat();
+    }
+
     const turnOnBoiler = this.shouldBoilerBeOn();
 
     console.log(`Setting boiler state to: ${turnOnBoiler ? "on" : "off"}`);

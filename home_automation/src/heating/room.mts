@@ -1,63 +1,56 @@
 import { HassEntityManager } from "@digital-alchemy/hass";
-import { HeatingDemand, TempSensor, Trv } from "./types.mts";
+import { HeatingDemand, TempSensor } from "./types.mts";
+import { BaseRadiator } from "./radiator.mts";
 
 export class RoomHeating {
   constructor(
     public name: string,
-    private hassEntity: HassEntityManager,
-    public readonly trvs: Trv[],
-    public readonly tempSensors: TempSensor[],
+    public readonly radiators: BaseRadiator[],
+    public readonly tempSensor?: TempSensor,
   ) {}
 
-  // TODO - it might be nice if a room understood _how long_ it was demanding heat, 
-  // and what the differential between desired + current temperatures are
+  private hassEntityManager: HassEntityManager;
 
-  public getState() {
-    const temperatures: number[] = [];
-    const trvPositions: number[] = [];
-    let hasWindowOpen = false;
+  setHassEntityManager(hassEntityManager: HassEntityManager) {
+    this.hassEntityManager = hassEntityManager;
 
-    for (const tempSensor of this.tempSensors) {
-      // annoying this is typed as number but comes through as string :|
-      const temperature = this.hassEntity.getCurrentState(`sensor.${tempSensor}`).state as unknown as string;
-      temperatures.push(parseFloat(temperature));
+    for (const radiator of this.radiators) {
+      radiator.setHassEntityManager(hassEntityManager);
     }
-
-    for (const trv of this.trvs) {
-      // annoying this is typed as number but comes through as string :|
-      const currentPosition = this.hassEntity.getCurrentState(`sensor.${trv}_position`).state as unknown as string;
-      const isWindowOpen = this.hassEntity.getCurrentState(`binary_sensor.${trv}_window_open`).state === "on";
-
-      trvPositions.push(parseFloat(currentPosition));
-      hasWindowOpen = hasWindowOpen || isWindowOpen;
-    }
-
-    return {
-      temperature: {
-        values: temperatures,
-        min: temperatures.length && Math.min(...temperatures) || null,
-        max: temperatures.length && Math.max(...temperatures) || null,
-      },
-      trvPositions: {
-        values: trvPositions,
-        min: trvPositions.length && Math.min(...trvPositions) || null,
-        max: trvPositions.length && Math.max(...trvPositions) || null,
-      },
-      hasWindowOpen,
-    };
   }
 
   public getHeatingDemand(): HeatingDemand {
-    const state = this.getState();
+    const heatingDemands = this.radiators.map(radiator => {
+      const state = radiator.getState();
+      
+      console.log(`${radiator.constructor.name} ${radiator.name}`, JSON.stringify(state));
 
-    if (state.trvPositions.max >= 50) {
-      return HeatingDemand.High;
-    }
-    else if (state.trvPositions.max > 0) {
-      return HeatingDemand.Low;
-    }
-    else {
-      return HeatingDemand.None;
+      return state.heatingDemand;
+    });
+
+    return maxHeatingDemand(heatingDemands);
+  }
+
+  public heartbeat() {
+    if (this.tempSensor) {
+      const measuredRoomTemperature = this.hassEntityManager.getCurrentState(`sensor.${this.tempSensor}`).state;
+      console.log(`${this.name} measuredTemperature: ${measuredRoomTemperature}`);
+
+      for (const radiator of this.radiators) {
+        radiator.setRoomTemperature(measuredRoomTemperature);
+      }
     }
   }
 }
+
+const maxHeatingDemand = (heatingDemands: HeatingDemand[]) => {
+  if (heatingDemands.includes(HeatingDemand.High)) {
+    return HeatingDemand.High;
+  }
+  
+  if (heatingDemands.includes(HeatingDemand.Low)) {
+    return HeatingDemand.Low;
+  }
+
+  return HeatingDemand.None;
+};
