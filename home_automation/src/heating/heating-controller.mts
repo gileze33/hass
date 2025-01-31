@@ -1,6 +1,7 @@
 import { HeatingDemand } from "./types.mts";
 import { RoomHeating } from "./room.mts";
-import { HassEntityManager } from "@digital-alchemy/hass";
+import { HassInjectable, SynapseInjectable } from "../hass-types.mts";
+import { TContext } from "@digital-alchemy/core";
 
 const FORCE_STATE_INTERVAL_SECONDS = 15 * 60; // 15 mins
 const FORCE_STATE_TOGGLE_GAP_SECONDS = 10; // 10 seconds
@@ -13,11 +14,12 @@ export class HeatingController {
 
   private lastForcedStateAt?: Date;
 
-  constructor(private hassEntityManager: HassEntityManager) {}
+  constructor(private hass: HassInjectable, private synapse: SynapseInjectable, private context: TContext) {}
 
   public registerRoom(room: RoomHeating) {
     if (!this.rooms.find(existingRoom => existingRoom.name === room.name)) {
-      room.setHassEntityManager(this.hassEntityManager);
+      room.setHass(this.hass);
+      room.setSynapse(this.context, this.synapse);
       this.rooms.push(room);
     }
   }
@@ -57,6 +59,7 @@ export class HeatingController {
   }
 
   private updateState() {
+    // we run room heartbeats prior to checking boiler state, as the latest heatingDemand should get updated nicely
     for (const room of this.rooms) {
       room.heartbeat();
     }
@@ -74,7 +77,7 @@ export class HeatingController {
   // for now, replicating what we have in HA automations, with a little more logic
   private shouldBoilerBeOn(): boolean {
     const roomDemandCounts = this.rooms.reduce((acc, room) => {
-      const heatingDemand = room.getHeatingDemand();
+      const heatingDemand = room.heatingDemand;
       acc.set(heatingDemand, acc.get(heatingDemand) + 1);
       return acc;
     }, new Map(Object.values(HeatingDemand).map(key => [key, 0])));

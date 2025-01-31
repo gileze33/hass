@@ -22,6 +22,7 @@ export enum TempSensor {
 }
 
 export enum HeatingDemand {
+  Unknown = "unknown",
   None = "none",
   Low = "low",
   High = "high"

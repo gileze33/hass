@@ -1,5 +1,5 @@
-import { HassEntityManager } from "@digital-alchemy/hass";
 import { ClimateName, HeatingDemand } from "./types.mts";
+import { HassInjectable } from "../hass-types.mts";
 
 export type TRVState = {
   setTemperature: number;
@@ -11,21 +11,30 @@ export type TRVState = {
 }
 
 export abstract class BaseRadiator {
-  protected hassEntityManager: HassEntityManager;
+  protected hass: HassInjectable;
 
   constructor(
     public name: ClimateName,
   ) {}
 
-  setHassEntityManager(hassEntityManager: HassEntityManager) {
-    this.hassEntityManager = hassEntityManager;
+  setHass(hass: HassInjectable) {
+    this.hass = hass;
   }
 
   get temperatureOffset(): number {
     // annoying mistyping here too
-    const offset = parseFloat(this.hassEntityManager.getCurrentState(`number.${this.name}_local_temperature_calibration`).state as unknown as string);
+    const offset = parseFloat(this.hass.entity.getCurrentState(`number.${this.name}_local_temperature_calibration`).state as unknown as string);
 
     return isNaN(offset) ? null : offset;
+  }
+
+  set temperatureOffset(desiredOffset: number) {
+    console.log(`Setting desired offset for ${this.name}: ${desiredOffset}`);
+
+    // this.hass.call.number.set_value({
+    //   value: `${desiredOffset}`,
+    //   entity_id: `number.${this.name}_local_temperature_calibration`,
+    // });
   }
 
   get measuredTemperature(): number {
@@ -38,18 +47,20 @@ export abstract class BaseRadiator {
     const measuredTemperature = this.measuredTemperature;
 
     if (!measuredTemperature) {
-      console.log(`Cannot update room temperature as measured temperature not available`);
+      console.warn(`Cannot update room temperature as measured temperature not available`);
+      return;
     }
 
-    const desiredOffset = roundToNearestPoint5(this.measuredTemperature - roomTemperature);
+    const difference = this.measuredTemperature - roomTemperature;
 
-    console.log(`Desired offset for ${this.name}: ${desiredOffset}`);
+    // desired offset not being set to the full difference to provide some kind of averaging..
+    const desiredOffset = roundToNearestPoint5(difference === 0 ? 0 : difference / 2);
 
-    // TODO - apply offset :) 
+    this.temperatureOffset = desiredOffset;
   }
 
   protected getAttributes() {
-    const attributes = this.hassEntityManager.getCurrentState(`climate.${this.name}`).attributes;
+    const attributes = this.hass.entity.getCurrentState(`climate.${this.name}`).attributes;
 
     return attributes;
   }
@@ -86,15 +97,10 @@ export class CheapTRVRadiator extends BaseRadiator {
 
 export class TS0601TRVRadiator extends BaseRadiator {
   private get currentPosition(): number {
-    const positionEntity = this.hassEntityManager.listEntities().find(entity => entity.includes(this.name) && entity.endsWith("position"));
-    const currentPosition = this.hassEntityManager.getCurrentState(positionEntity).state as number;
+    const positionEntity = this.hass.entity.listEntities().find(entity => entity.includes(this.name) && entity.endsWith("position"));
+    const currentPosition = this.hass.entity.getCurrentState(positionEntity).state as number;
 
     return currentPosition;
-  }
-
-  get temperatureOffset(): number {
-    // annoying mistyping here...
-    return parseFloat(this.hassEntityManager.getCurrentState(`number.${this.name}_local_temperature_calibration`).state as unknown as string);
   }
 
   get measuredTemperature(): number {

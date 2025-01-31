@@ -4,8 +4,8 @@ import { HeatingController } from "./heating-controller.mts";
 import { RoomHeating } from "./room.mts";
 import { CheapTRVRadiator, TS0601TRVRadiator } from "./radiator.mts";
 
-export function Heating({ hass, config, logger }: TServiceParams) {  
-  const heatingController = new HeatingController(hass.entity);
+export function Heating({ hass, config, logger, synapse, context }: TServiceParams) {  
+  const heatingController = new HeatingController(hass, synapse, context);
 
   heatingController.registerRoom(new RoomHeating("topStudy", [new TS0601TRVRadiator(ClimateName.TopStudy)], TempSensor.TopStudy));
   heatingController.registerRoom(new RoomHeating("livingRoom", [new TS0601TRVRadiator(ClimateName.LivingRoomFront)], TempSensor.LivingRoom));

@@ -1,6 +1,9 @@
-import { HassEntityManager } from "@digital-alchemy/hass";
 import { HeatingDemand, TempSensor } from "./types.mts";
 import { BaseRadiator } from "./radiator.mts";
+import { HassInjectable, SynapseInjectable } from "../hass-types.mts";
+import { TContext } from "@digital-alchemy/core";
+import { sentenceCase } from "change-case";
+import { SynapseEntityProxy, TSynapseDeviceId } from "@digital-alchemy/synapse";
 
 export class RoomHeating {
   constructor(
@@ -9,17 +12,57 @@ export class RoomHeating {
     public readonly tempSensor?: TempSensor,
   ) {}
 
-  private hassEntityManager: HassEntityManager;
+  private hass: HassInjectable;
 
-  setHassEntityManager(hassEntityManager: HassEntityManager) {
-    this.hassEntityManager = hassEntityManager;
+  private synapseDevice: TSynapseDeviceId;
+  private synapseSensors: {
+    heatingDemand?: ReturnType<SynapseInjectable["sensor"]>;
+  } = {};
+
+  public heatingDemand: HeatingDemand = HeatingDemand.Unknown;
+
+  setHass(hass: HassInjectable) {
+    this.hass = hass;
 
     for (const radiator of this.radiators) {
-      radiator.setHassEntityManager(hassEntityManager);
+      radiator.setHass(hass);
     }
   }
 
-  public getHeatingDemand(): HeatingDemand {
+  setSynapse(context: TContext, synapse: SynapseInjectable) {
+    if (this.synapseDevice) {
+      return;
+    }
+
+    this.synapseDevice = synapse.device.register(`room/${this.name}`, {
+      name: sentenceCase(this.name),
+    });
+
+    this.synapseSensors.heatingDemand = synapse.sensor({
+      device_id: this.synapseDevice,
+      device_class: "enum",
+      context,
+      name: `${this.name}_heating_demand`,
+      options: Object.values(HeatingDemand).map(option => sentenceCase(option)),
+      state: {
+        current: () => {
+          console.log(`Current is ${this.heatingDemand}`);
+          return sentenceCase(this.heatingDemand);
+        },
+      },
+    });
+  }
+
+  public heartbeat() {
+    if (this.tempSensor) {
+      const measuredRoomTemperature = this.hass.entity.getCurrentState(`sensor.${this.tempSensor}`).state;
+      console.log(`${this.name} measuredTemperature: ${measuredRoomTemperature}`);
+
+      for (const radiator of this.radiators) {
+        radiator.setRoomTemperature(measuredRoomTemperature);
+      }
+    }
+
     const heatingDemands = this.radiators.map(radiator => {
       const state = radiator.getState();
       
@@ -28,18 +71,7 @@ export class RoomHeating {
       return state.heatingDemand;
     });
 
-    return maxHeatingDemand(heatingDemands);
-  }
-
-  public heartbeat() {
-    if (this.tempSensor) {
-      const measuredRoomTemperature = this.hassEntityManager.getCurrentState(`sensor.${this.tempSensor}`).state;
-      console.log(`${this.name} measuredTemperature: ${measuredRoomTemperature}`);
-
-      for (const radiator of this.radiators) {
-        radiator.setRoomTemperature(measuredRoomTemperature);
-      }
-    }
+    this.heatingDemand = maxHeatingDemand(heatingDemands);
   }
 }
 
